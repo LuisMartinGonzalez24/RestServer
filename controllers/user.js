@@ -1,15 +1,35 @@
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
+const { getAndConvertToNumber } = require('../helpers/commonFunctions');
 
-const getUser = (request, res = response) => {
+const getUser = async (request, res = response) => {
+
+    const { limit, initial } = request.query;
+
+    const defaultLimit = getAndConvertToNumber(limit, 5);
+    const defaultInitial = getAndConvertToNumber(initial, 0);
+
+    const filter = {
+        status: true,
+    };
+
+    const [total, users] = await Promise.all([
+        User.countDocuments(filter),
+        User.find(filter)
+            .limit(defaultLimit)
+            .skip(defaultInitial)
+    ]);
+
+
     res.json({
-        msg: 'get api - controller'
+        total,
+        users,
     });
 };
 
 const addUser = async (request, res = response) => {
-    
+
     const { name, email, password, google, role } = request.body;
 
     const user = new User({
@@ -19,15 +39,6 @@ const addUser = async (request, res = response) => {
         google,
         role
     });
-
-    //* Verify if the email exixsts
-    const existEmail = await User.findOne({ email: email });
-
-    if (existEmail) {
-        return res.status(400).json({
-            message: 'Email already exist'
-        });
-    }
 
     //* Encrypt password
     const salt = bcrypt.genSaltSync(10);
@@ -42,14 +53,42 @@ const addUser = async (request, res = response) => {
     });
 };
 
-const deleteUser = (request, res = response) => {
+const updateUser = async (request, res = response) => {
+
+    const { id } = request.params;
+    const { _id, password, google, email, ...restProperties } = request.body;
+
+    //* Validate password
+    if (password) {
+        const salt = bcrypt.genSaltSync(10);
+        restProperties.password = bcrypt.hashSync(password, salt);
+    }
+
+    await User.findByIdAndUpdate(id, restProperties);
+    const updatedUser = await User.findOne({ id });
+
     res.json({
-        msg: 'delete api - controller'
+        msg: 'update api - controller',
+        updatedUser,
     });
+};
+
+const deleteUser = async (request, res = response) => {
+
+    const { id } = request.params;
+
+    const filter = {
+        status: false,
+    };
+
+    const deletedUser = await User.findByIdAndUpdate(id, filter);
+
+    res.json(deletedUser);
 };
 
 module.exports = {
     getUser,
     addUser,
+    updateUser,
     deleteUser,
 };

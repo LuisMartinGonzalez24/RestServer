@@ -1,8 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const { dbConnection } =  require('../database/config');
+import express, { Express } from 'express';
+import cors from 'cors';
+import { dbConnection } from '../database/config';
 
 class Server {
+
+    private app: Express;
+    private port: string | undefined;
+    private userRoutes: string;
 
     constructor() {
         this.app = express();
@@ -46,4 +50,4 @@ class Server {
     }
 }
 
-module.exports = Server;
+export default Server;

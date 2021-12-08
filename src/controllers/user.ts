@@ -1,9 +1,10 @@
-const { response } = require('express');
-const bcrypt = require('bcryptjs');
-const User = require('../models/user');
-const { getAndConvertToNumber } = require('../helpers/commonFunctions');
+import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
+import User from '../models/user';
+import { getAndConvertToNumber } from '../helpers/commonFunctions';
+import { UpdateQuery } from 'mongoose';
 
-const getUser = async (request, res = response) => {
+const getUser = async (request: Request, response: Response) => {
 
     const { limit, initial } = request.query;
 
@@ -22,13 +23,13 @@ const getUser = async (request, res = response) => {
     ]);
 
 
-    res.json({
+    response.json({
         total,
         users,
     });
 };
 
-const addUser = async (request, res = response) => {
+const addUser = async (request: Request, response: Response) => {
 
     const { name, email, password, google, role } = request.body;
 
@@ -47,13 +48,13 @@ const addUser = async (request, res = response) => {
     //* Save in DB
     await user.save();
 
-    res.json({
+    response.json({
         msg: 'post api - controller',
         user,
     });
 };
 
-const updateUser = async (request, res = response) => {
+const updateUser = async (request: Request, res: Response) => {
 
     const { id } = request.params;
     const { _id, password, google, email, ...restProperties } = request.body;
@@ -73,20 +74,20 @@ const updateUser = async (request, res = response) => {
     });
 };
 
-const deleteUser = async (request, res = response) => {
+const deleteUser = async (request: Request, response: Response) => {
 
     const { id } = request.params;
 
-    const filter = {
+    const filter: any = {
         status: false,
     };
 
     const deletedUser = await User.findByIdAndUpdate(id, filter);
 
-    res.json(deletedUser);
+    response.json(deletedUser);
 };
 
-module.exports = {
+export {
     getUser,
     addUser,
     updateUser,

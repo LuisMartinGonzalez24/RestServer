@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "sourceMap": true,
+        "outDir": "./dist",
+        "strict": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": [
+        "src/**/*.ts" //Check all files in sub files and all must have extension .ts
+    ],
+    "exclude": [
+        "node_modules"
+    ],
+}

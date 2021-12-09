@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/user';
 import { getAndConvertToNumber } from '../helpers/commonFunctions';
+import { IGetTokenRequest } from '../interfaces/RequestInterfaces';
 
 const getUser = async (request: Request, response: Response) => {
 
@@ -73,7 +74,7 @@ const updateUser = async (request: Request, res: Response) => {
     });
 };
 
-const deleteUser = async (request: Request, response: Response) => {
+const deleteUser = async (request: IGetTokenRequest, response: Response) => {
 
     const { id } = request.params;
 
@@ -83,7 +84,10 @@ const deleteUser = async (request: Request, response: Response) => {
 
     const deletedUser = await User.findByIdAndUpdate(id, filter);
 
-    response.json(deletedUser);
+    response.json({
+        deletedUser,
+        uid: request.uid
+    });
 };
 
 export {

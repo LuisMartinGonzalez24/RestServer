@@ -1,19 +1,17 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import { dbConnection } from '../database/config';
-import UserRoute from '../routes/user';
-
+import routes from '../routes/index';
 
 class Server {
 
     private app: Application;
     private port: string;
-    private userRoutes: string;
 
     constructor() {
         this.app = express();
         this.port = process.env.PORT || '8080';
-        this.userRoutes = '/api/user';
+        
 
         // Connect to database
         this.initializeDatabase();
@@ -42,7 +40,7 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.userRoutes, UserRoute);
+        this.app.use(routes);
     }
 
     listen() {

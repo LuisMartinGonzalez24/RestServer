@@ -1,6 +1,10 @@
 import { Schema, model } from 'mongoose';
 
-const RoleSchema = new Schema({
+interface Role {
+    role: string;
+}
+
+const RoleSchema = new Schema<Role>({
     role: {
         type: String,
         required: [true, "The role is required"],

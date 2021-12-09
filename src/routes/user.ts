@@ -4,7 +4,7 @@ import { getUser, addUser, updateUser, deleteUser } from '../controllers/user';
 import { validateRoles, emailExist, userExistsById } from '../helpers/dbValidations';
 import { validateFields } from '../middlewares/validateFields';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/', getUser);
 
@@ -29,4 +29,4 @@ router.delete('/:id', [
     validateFields,
 ], deleteUser);
 
-module.exports = router;
+export default router;

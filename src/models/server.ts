@@ -1,16 +1,18 @@
-import express, { Express } from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 import { dbConnection } from '../database/config';
+import UserRoute from '../routes/user';
+
 
 class Server {
 
-    private app: Express;
-    private port: string | undefined;
+    private app: Application;
+    private port: string;
     private userRoutes: string;
 
     constructor() {
         this.app = express();
-        this.port = process.env.PORT;
+        this.port = process.env.PORT || '8080';
         this.userRoutes = '/api/user';
 
         // Connect to database
@@ -40,7 +42,7 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.userRoutes, require('../routes/user'));
+        this.app.use(this.userRoutes, UserRoute);
     }
 
     listen() {

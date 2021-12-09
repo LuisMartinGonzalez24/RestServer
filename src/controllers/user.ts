@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/user';
 import { getAndConvertToNumber } from '../helpers/commonFunctions';
-import { UpdateQuery } from 'mongoose';
 
 const getUser = async (request: Request, response: Response) => {
 
@@ -78,7 +77,7 @@ const deleteUser = async (request: Request, response: Response) => {
 
     const { id } = request.params;
 
-    const filter: any = {
+    const filter = {
         status: false,
     };
 

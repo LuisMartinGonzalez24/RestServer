@@ -1,6 +1,16 @@
 import { Schema, model } from 'mongoose';
 
-const UserScheme = new Schema({
+interface User {
+    name: string;
+    email: string;
+    password: string;
+    image: string;
+    role: string;
+    google: boolean;
+    status: boolean;
+}
+
+const UserScheme = new Schema<User>({
     name: {
         type: String,
         required: [true, 'The name is required'],

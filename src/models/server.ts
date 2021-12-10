@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import { dbConnection } from '../database/config';
 import routes from '../routes/index';
+import path from 'path';
 
 class Server {
 

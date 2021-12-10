@@ -25,8 +25,8 @@ const signIn = async (request: Request, response: Response) => {
         }
 
         //* Verify password
-        const validatePassword = bcrypt.compareSync(password, user.password);
-        if (!validatePassword) {
+        const isPasswordCorrect = bcrypt.compareSync(password, user.password);
+        if (!isPasswordCorrect) {
             return response.status(400).json({
                 msg: 'Email/password incorrect - password'
             })

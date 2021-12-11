@@ -1,8 +1,5 @@
 import { Schema, model } from 'mongoose';
-
-interface Role {
-    role: string;
-}
+import { Role } from '../interfaces/schemeInterfaces';
 
 const RoleSchema = new Schema<Role>({
     role: {

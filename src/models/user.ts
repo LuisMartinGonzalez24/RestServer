@@ -1,14 +1,5 @@
 import { Schema, model } from 'mongoose';
-
-interface User {
-    name: string;
-    email: string;
-    password: string;
-    image: string;
-    role: string;
-    google: boolean;
-    status: boolean;
-}
+import { User } from '../interfaces/schemeInterfaces';
 
 const UserScheme = new Schema<User>({
     name: {
@@ -49,7 +40,9 @@ const UserScheme = new Schema<User>({
 });
 
 UserScheme.methods.toJSON = function () {
-    const { __v, password, ...user } = this.toObject();
+    const { __v, password, _id, ...user } = this.toObject();
+    user.uid = _id;
+
     return user;
 };
 

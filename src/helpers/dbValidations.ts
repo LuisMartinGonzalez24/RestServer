@@ -1,7 +1,7 @@
-const Role = require('../models/role');
-const User = require('../models/user');
+import Role from '../models/role';
+import User from '../models/user';
 
-const validateRoles = async (role = '') => {
+const validateRoles = async (role: string) => {
     const existRole = await Role.findOne({ role });
 
     if (!existRole || existRole === undefined) {
@@ -9,7 +9,7 @@ const validateRoles = async (role = '') => {
     };
 }
 
-const emailExist = async (email = '') => {
+const emailExist = async (email: string) => {
     //* Verify if the email exixsts
     const existEmail = await User.findOne({ email });
 
@@ -18,7 +18,7 @@ const emailExist = async (email = '') => {
     }
 }
 
-const userExistsById = async (id) => {
+const userExistsById = async (id: string) => {
     //* Verify if the user with id exists
     const existUser = await User.findById(id);
 
@@ -27,7 +27,7 @@ const userExistsById = async (id) => {
     }
 }
 
-module.exports = {
+export {
     validateRoles,
     emailExist,
     userExistsById

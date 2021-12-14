@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import bcrypt from 'bcryptjs';
 import User from '../models/user';
+import { User as UserInterface } from '../interfaces/schemeInterfaces';
 import { generateJwt } from "../helpers/commonFunctions";
+import { verifyGoogleToken } from "../helpers/verifyGoogleToken";
 
 const signIn = async (request: Request, response: Response) => {
 
@@ -46,6 +48,60 @@ const signIn = async (request: Request, response: Response) => {
     }
 };
 
+const onGoogleSignIn = async (request: Request, response: Response) => {
+
+    const { idToken } = request.body;
+
+    try {
+
+        const { name, email, picture } = await verifyGoogleToken(idToken);
+
+        let user = await User.findOne({ email });
+
+        if (user) {
+            if (!user.status) {
+                return response.status(401).json({
+                    msg: 'Call to support, user blocked/desactivated'
+                });
+            } else {
+                //* Generate JWT
+                const token = await generateJwt(user.id);
+
+                return response.json({
+                    user,
+                    token,
+                });
+            }
+        } else {
+            //* Create user
+            const data: UserInterface = {
+                name,
+                email,
+                password: ':p',
+                image: picture,
+                role: 'USER_ROLE',
+                google: true,
+                status: true,
+            }
+
+            user = new User(data);
+            await user.save();
+        }
+
+
+        response.status(200).json({
+            msg: 'Google Sign in',
+            idToken,
+        })
+
+    } catch (error) {
+        response.status(400).json({
+            msg: 'Google token is not valid',
+        })
+    }
+};
+
 export {
     signIn,
+    onGoogleSignIn
 };

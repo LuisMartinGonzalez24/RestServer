@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import User from '../models/user';
+import { UserModel } from '../models/index';
 import { IGetTokenRequest } from '../interfaces/requestInterfaces';
 
 interface PayloadJWTProps extends JwtPayload {
@@ -23,7 +23,7 @@ const isValidJwt = async (request: IGetTokenRequest, response: Response, next: N
         const payload = <PayloadJWTProps>jwt.verify(token, process.env.ENCRYPTION_ALGORITHM_JWT || 'T3stAlg0r1thm');
         console.log(payload);
 
-        const authenticatedUser = await User.findById(payload.uid);
+        const authenticatedUser = await UserModel.findById(payload.uid);
 
         if (authenticatedUser) {
             if (!authenticatedUser.status) {

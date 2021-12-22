@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from 'bcryptjs';
-import User from '../models/user';
+import { UserModel } from "../models/index";
 import { User as UserInterface } from '../interfaces/schemeInterfaces';
 import { generateJwt } from "../helpers/commonFunctions";
 import { verifyGoogleToken } from "../helpers/verifyGoogleToken";
@@ -11,7 +11,7 @@ const signIn = async (request: Request, response: Response) => {
 
     try {
         //* Verify if user exist
-        const user = await User.findOne({ email });
+        const user = await UserModel.findOne({ email });
 
         if (!user) {
             return response.status(400).json({
@@ -56,7 +56,7 @@ const onGoogleSignIn = async (request: Request, response: Response) => {
 
         const { name, email, picture } = await verifyGoogleToken(idToken);
 
-        let user = await User.findOne({ email });
+        let user = await UserModel.findOne({ email });
 
         if (user) {
             if (!user.status) {
@@ -84,7 +84,7 @@ const onGoogleSignIn = async (request: Request, response: Response) => {
                 status: true,
             }
 
-            user = new User(data);
+            user = new UserModel(data);
             await user.save();
         }
 

@@ -10,7 +10,7 @@ const generateJwt = (uid: string) => {
 
         jwt.sign(
             payload,
-            process.env.ENCRYPTION_ALGORITHM_JWT || 'T3stAlg0r1thm', { expiresIn: '1h' },
+            process.env.ENCRYPTION_ALGORITHM_JWT || 'T3stAlg0r1thm', { expiresIn: '4h' },
             (error, token) => {
                 if (error) {
                     console.log(error);

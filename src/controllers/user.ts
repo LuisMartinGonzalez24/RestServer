@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import User from '../models/user';
+import { UserModel } from '../models/index';
 import { getAndConvertToNumber } from '../helpers/commonFunctions';
 import { IGetTokenRequest } from '../interfaces/requestInterfaces';
 
@@ -16,8 +16,8 @@ const getUser = async (request: Request, response: Response) => {
     };
 
     const [total, users] = await Promise.all([
-        User.countDocuments(filter),
-        User.find(filter)
+        UserModel.countDocuments(filter),
+        UserModel.find(filter)
             .limit(defaultLimit)
             .skip(defaultInitial)
     ]);
@@ -33,7 +33,7 @@ const addUser = async (request: Request, response: Response) => {
 
     const { name, email, password, google, role } = request.body;
 
-    const user = new User({
+    const user = new UserModel({
         name,
         email,
         password,
@@ -65,8 +65,8 @@ const updateUser = async (request: Request, res: Response) => {
         restProperties.password = bcrypt.hashSync(password, salt);
     }
 
-    await User.findByIdAndUpdate(id, restProperties);
-    const updatedUser = await User.findOne({ id });
+    await UserModel.findByIdAndUpdate(id, restProperties);
+    const updatedUser = await UserModel.findOne({ id });
 
     res.json({
         msg: 'update api - controller',
@@ -83,7 +83,7 @@ const deleteUser = async (request: IGetTokenRequest, response: Response) => {
         status: false,
     };
 
-    const deletedUser = await User.findByIdAndUpdate(id, filter);
+    const deletedUser = await UserModel.findByIdAndUpdate(id, filter);
 
     response.json({
         deletedUser,

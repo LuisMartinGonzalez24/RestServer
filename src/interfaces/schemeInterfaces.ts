@@ -1,5 +1,11 @@
 import { RoleTypes } from "../types/types";
 
+export interface Category {
+    name: string;
+    status: boolean;
+    user: any;
+}
+
 export interface Role {
     role: string;
 }

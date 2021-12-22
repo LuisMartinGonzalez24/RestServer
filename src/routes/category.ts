@@ -1,6 +1,12 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import { getCategories, addCategory, getCategory, updateCategory, deleteCategory } from "../controllers/category";
+import {
+    getCategories,
+    addCategory,
+    getCategory,
+    updateCategory,
+    deleteCategory
+} from "../controllers/category";
 import { existCategory, userExistsById } from "../helpers/dbValidations";
 import { isAdminRole } from "../middlewares/isAdminRole";
 import { validateFields } from "../middlewares/validateFields";
@@ -28,6 +34,7 @@ router.post('/', [
 router.put('/:id', [
     isValidJwt,
     check('id').custom(existCategory),
+    check('status').isBoolean(),
     validateFields,
 ], updateCategory);
 
@@ -36,7 +43,6 @@ router.delete('/:id', [
     isValidJwt,
     isAdminRole,
     check('id', 'Is not a mongo id').isMongoId(),
-    check('id').custom(userExistsById),
     check('id').custom(existCategory),
     validateFields,
 ], deleteCategory);

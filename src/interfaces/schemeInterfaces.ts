@@ -1,5 +1,15 @@
 import { RoleTypes } from "../types/types";
 
+export interface Product {
+    name: string;
+    status: boolean;
+    user: any;
+    price: number;
+    category: any;
+    description: string;
+    available: boolean;
+}
+
 export interface Category {
     name: string;
     status: boolean;

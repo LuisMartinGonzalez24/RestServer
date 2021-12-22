@@ -32,6 +32,10 @@ const existCategory = async (id: string) => {
     if (!category) {
         throw new Error(`The category with id: ${id} not exists`);   
     }
+
+    if (category.status === false) {
+        throw new Error(`The category does not exists - eliminated`);   
+    }
 };
 
 export {

@@ -6,9 +6,17 @@ interface IAddProductBody {
     name: string;
 }
 
-const getCategories = (request: Request, response: Response) => {
+const getCategories = async (request: Request, response: Response) => {
+
+    const filter = {
+        status: true,
+    }
+
+    const categories = await CategoryModel.find(filter).populate('user', ['name', 'email']);
+
     response.json({
-        msg: 'From get categories'
+        msg: 'From get all categories',
+        categories,
     })
 };
 
@@ -64,9 +72,7 @@ const deleteCategory = async (request: Request, response: Response) => {
         status: false,
     };
 
-    let category = await CategoryModel.findByIdAndUpdate(id, filter);
-
-    category = await CategoryModel.findById(id);
+    let category = await CategoryModel.findByIdAndUpdate(id, filter, { new: true });
 
     response.json({
         msg: 'From delete by id',
@@ -76,21 +82,21 @@ const deleteCategory = async (request: Request, response: Response) => {
 
 const updateCategory = async (request: Request, response: Response) => {
     const { id } = request.params;
-    const { name } = request.body
+    const { name, status } = request.body
 
-    let category = await CategoryModel.findByIdAndUpdate(
-        id, 
-        {
-            name,
-        },
-    );
+    try {
+        let category = await CategoryModel.findByIdAndUpdate(id, { name, status }, { new: true, });
 
-    category = await CategoryModel.findById(id);
-
-    response.json({
-        msg: 'From put by id',
-        category
-    })
+        response.json({
+            msg: 'From put by id',
+            category
+        })
+    } catch (error) {
+        response.status(400).json({
+            msg: 'Error to update category',
+            error,
+        })
+    }
 };
 
 export { getCategories, getCategory, addCategory, updateCategory, deleteCategory };

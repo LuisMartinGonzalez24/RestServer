@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { Role } from '../interfaces/schemeInterfaces';
+import { Collections } from '../types/types';
 
 const RoleSchema = new Schema<Role>({
     role: {
@@ -8,4 +9,4 @@ const RoleSchema = new Schema<Role>({
     }
 });
 
-export default model('Role', RoleSchema);
+export default model(Collections.ROLE, RoleSchema);

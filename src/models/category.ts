@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { Category } from "../interfaces/schemeInterfaces";
+import { Collections } from "../types/types";
 
 const CategorySchema = new Schema<Category>({
     name: {
@@ -16,7 +17,7 @@ const CategorySchema = new Schema<Category>({
 
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: Collections.USER,
         required: true, 
     }
 });
@@ -26,4 +27,4 @@ CategorySchema.methods.toJSON = function () {
     return category;
 };
 
-export default model('Category', CategorySchema);
+export default model(Collections.CATEGORY, CategorySchema);

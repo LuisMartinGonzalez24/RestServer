@@ -8,26 +8,33 @@ const getProducts = async (request: Request, response: Response) => {
         status: true,
     }
 
-    const products = await ProductModel.find(filter);
+    const [total, products] = await Promise.all([
+        ProductModel.countDocuments(filter),
+        ProductModel
+            .find(filter)
+            .populate('category', 'name')
+            .populate('user', 'name')
+    ])
 
     response.json({
         msg: 'get from getProducts',
+        total,
         products,
     });
 };
 
 const addProduct = async (request: IGetTokenRequest, response: Response) => {
-    const { id } = request.params;
-    const { name, price, description } = request.body;
+
+    const { categoryId, name, price, description } = request.body;
 
     try {
-        
+
         const data = {
             name,
             price,
             description,
             user: request.uid,
-            category: id,
+            category: categoryId,
         };
 
         const product = new ProductModel(data);
@@ -40,8 +47,47 @@ const addProduct = async (request: IGetTokenRequest, response: Response) => {
     }
 }
 
+const deleteProduct = async (request: Request, response: Response) => {
+    const { id } = request.params;
+
+    const filter = {
+        status: false,
+    };
+
+    let product = await ProductModel.findByIdAndUpdate(id, filter, { new: true });
+
+    response.json({
+        msg: 'From delete by id',
+        product
+    })
+};
+
+const updateProduct = async (request: Request, response: Response) => {
+
+    const { id } = request.params;
+    const { name, price, description } = request.body;
+
+    try {
+
+        const data = {
+            name,
+            price,
+            description,
+        };
+
+        const product = await ProductModel.findByIdAndUpdate(id, data, { new: true });
+
+        response.status(200).json(product);
+    } catch (ex) {
+        console.log('error to update category', ex);
+    }
+};
+
+
 
 export {
     getProducts,
     addProduct,
+    updateProduct,
+    deleteProduct,
 }

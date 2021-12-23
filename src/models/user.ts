@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { User } from '../interfaces/schemeInterfaces';
+import { Collections } from '../types/types';
 
 const UserScheme = new Schema<User>({
     name: {
@@ -46,4 +47,4 @@ UserScheme.methods.toJSON = function () {
     return user;
 };
 
-export default model('User', UserScheme);
+export default model(Collections.USER, UserScheme);

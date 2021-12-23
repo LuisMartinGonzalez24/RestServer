@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { Product } from "../interfaces/schemeInterfaces";
+import { Collections } from "../types/types";
 
 const ProductSchema = new Schema<Product>({
     name: {
@@ -16,7 +17,7 @@ const ProductSchema = new Schema<Product>({
 
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: Collections.USER,
         required: true, 
     },
 
@@ -27,7 +28,7 @@ const ProductSchema = new Schema<Product>({
 
     category: {
         type: Schema.Types.ObjectId,
-        ref: 'Category',
+        ref: Collections.CATEGORY,
         required: true,
     },
 
@@ -46,4 +47,4 @@ ProductSchema.methods.toJSON = function () {
     return product;
 };
 
-export default model('Product', ProductSchema);
+export default model(Collections.PRODUCT, ProductSchema);

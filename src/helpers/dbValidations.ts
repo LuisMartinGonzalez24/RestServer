@@ -1,4 +1,4 @@
-import { RoleModel, UserModel, CategoryModel } from '../models/index';
+import { RoleModel, UserModel, CategoryModel, ProductModel } from '../models/index';
 
 const validateRoles = async (role: string) => {
     const existRole = await RoleModel.findOne({ role });
@@ -38,9 +38,22 @@ const existCategory = async (id: string) => {
     }
 };
 
+const existProduct = async (id: string) => {
+    const product = await ProductModel.findById(id);
+
+    if (!product) {
+        throw new Error(`The product with id: ${id} not exists`);   
+    }
+
+    if (product.status === false) {
+        throw new Error(`The product does not exists - eliminated`);   
+    }
+};
+
 export {
     validateRoles,
     emailExist,
     userExistsById,
-    existCategory
+    existCategory,
+    existProduct,
 };

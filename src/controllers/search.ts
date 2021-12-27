@@ -29,24 +29,40 @@ const search = async (request: Request, response: Response) => {
     const { collection } = request.params;
 
     if (isValidObjectId(collection)) {
-
         const user = await UserModel.findById(collection);
+        const results = user ? [user] : { msg: "Id doesn't exist" };
 
-        
-
-    } else {
-        const collections = Object.values(Collections);
-
-        const result = await returnResults('User', 'Galletas saladas');
-
-        console.log('from find: ', collections.find(x => x === collection));
-        console.log('collection param: ', collection);
-        console.log('searchInCollection: ', collections);
-        console.log('results from switch: ', result);
+        return response.json({
+            results,
+        });
     }
+
+    const regex = new RegExp(collection, 'i');
+
+    console.log('regex: ', regex);
+
+    const conRegex = await UserModel.find({
+        $or: [{ name: regex }, { email: regex }]
+    });
+    
+    const sinRegex = await UserModel.find({
+        $or: [{ name: collection }, { email: collection }]
+    });
+
+    const collections = Object.values(Collections);
+
+    const result = await returnResults('User', 'Galletas saladas');
+
+    console.log('from find: ', collections.find(x => x === collection));
+    console.log('collection param: ', collection);
+    console.log('searchInCollection: ', collections);
+    console.log('results from switch: ', result);
+
 
     response.json({
         msg: 'get from search',
+        conRegex,
+        sinRegex,
     });
 };
 

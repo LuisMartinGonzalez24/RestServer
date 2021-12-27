@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const dbConnection = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URL_CONNECTION);
+        await mongoose.connect(process.env.MONGODB_URL_CONNECTION || 'mongodb://localhost/coffe-nodejs');
         console.log('Database connection succesfull');
     } catch (ex) {
         console.log(ex);

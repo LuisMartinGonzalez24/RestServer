@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { isValidObjectId } from "mongoose";
 import { UserModel, ProductModel } from "../models/index";
 import { Collections } from "../types/types";
 
@@ -8,7 +9,7 @@ const returnResults = async (collection: string, value: string) => {
             case Collections.USER:
 
                 const results = await ProductModel.find({ name: value });
-                const data = results.map(({name, price, description}) => ({
+                const data = results.map(({ name, price, description }) => ({
                     name, price, description
                 }));
 
@@ -27,14 +28,22 @@ const search = async (request: Request, response: Response) => {
 
     const { collection } = request.params;
 
-    const collections = Object.values(Collections);
+    if (isValidObjectId(collection)) {
 
-    const result = await returnResults('User', 'Galletas saladas');
+        const user = await UserModel.findById(collection);
 
-    console.log('from find: ', collections.find(x => x === collection));
-    console.log('collection param: ', collection);
-    console.log('searchInCollection: ', collections);
-    console.log('results from switch: ', result);
+        
+
+    } else {
+        const collections = Object.values(Collections);
+
+        const result = await returnResults('User', 'Galletas saladas');
+
+        console.log('from find: ', collections.find(x => x === collection));
+        console.log('collection param: ', collection);
+        console.log('searchInCollection: ', collections);
+        console.log('results from switch: ', result);
+    }
 
     response.json({
         msg: 'get from search',

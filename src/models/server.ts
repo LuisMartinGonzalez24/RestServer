@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import cors from 'cors';
 import { dbConnection } from '../database/config';
 import routes from '../routes/index';
+import fileUpload from 'express-fileupload';
 
 class Server {
 
@@ -11,11 +12,11 @@ class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT || '8080';
-        
+
 
         // Connect to database
         this.initializeDatabase();
-        
+
         // Middlewares
         this.middlewares();
 
@@ -37,6 +38,13 @@ class Server {
 
         // Public Directory
         this.app.use(express.static('public'));
+
+        // File upload
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/'
+        }));
+
     }
 
     routes() {

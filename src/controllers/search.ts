@@ -42,9 +42,10 @@ const search = async (request: Request, response: Response) => {
     console.log('regex: ', regex);
 
     const conRegex = await UserModel.find({
-        $or: [{ name: regex }, { email: regex }]
+        $or: [{ name: regex }, { email: regex }],
+        $and: [{status: true,}]
     });
-    
+
     const sinRegex = await UserModel.find({
         $or: [{ name: collection }, { email: collection }]
     });

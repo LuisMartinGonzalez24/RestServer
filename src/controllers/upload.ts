@@ -12,7 +12,7 @@ const uploadFile = async (request: Request, response: Response) => {
     const fileField = request.files?.archivo;
 
     try {
-        const pathFile = await helperUploadFile(fileField, ['txt']);
+        const pathFile = await helperUploadFile(fileField, undefined, 'react');
 
         response.status(200).json({
             pathFile,
@@ -22,7 +22,6 @@ const uploadFile = async (request: Request, response: Response) => {
             msg,
         });
     }
-
 
 };
 
